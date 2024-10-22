@@ -33,6 +33,7 @@
         <sonar.sources>common,examples,tsfile</sonar.sources>
         <sonar.cfamily.build-wrapper-output>${project.build.directory}/build-wrapper-output</sonar.cfamily.build-wrapper-output>
         <cmake.addition.option>-DCOV_ENABLED=OFF</cmake.addition.option>
+        <conan.profile>${user.home}/.conan2/profiles/default</conan.profile>
     </properties>
     <build>
         <sourceDirectory>${project.basedir}</sourceDirectory>
@@ -40,6 +41,61 @@
             <!--
                 Do the actual build.
             -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <!-- 初始化阶段安装 conan -->
+                    <execution>
+                        <id>install-conan</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>pip</executable>
+                            <arguments>
+                                <argument>install</argument>
+                                <argument>conan</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-conan-profile</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>cmd</executable>
+                            <arguments>
+                                <argument>/c</argument>
+                                <argument>if not exist ${conan.profile} (conan profile detect)</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- 使用 conan install 来解决依赖 -->
+                    <execution>
+                        <id>conan-install-dependencies</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>conan</executable>
+                            <arguments>
+                                <argument>install</argument>
+                                <argument>.</argument>
+                                <!-- 使用当前目录下的 conanfile.txt -->
+                                <argument>--build=missing</argument>
+                                <!-- 构建缺失的依赖 -->
+                                <argument>--profile:host=default</argument>
+                                <argument>-of=${project.build.directory}/build</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.googlecode.cmake-maven-project</groupId>
                 <artifactId>cmake-maven-plugin</artifactId>

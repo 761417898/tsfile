@@ -1,0 +1,7 @@
+[requires]
+gtest/1.12.1
+snappy/1.2.1
+
+[generators]
+CMakeToolchain
+CMakeDeps

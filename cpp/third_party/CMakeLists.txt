@@ -16,7 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 ]]
-add_subdirectory(google_snappy)
+if(NOT CONAN_FOUND)
+    add_subdirectory(google_snappy)
+endif()
+
 add_subdirectory(lz4)
 add_subdirectory(lzokay)
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
