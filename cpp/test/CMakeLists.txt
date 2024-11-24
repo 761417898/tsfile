@@ -73,6 +73,7 @@ file(GLOB_RECURSE TEST_SRCS
         "file/*_test.cc"
         "compress/*_test.cc"
         "writer/*_test.cc"
+        "reader/filter/*_test.cc"
         )
 if (${COV_ENABLED})
     message("Enable code cov...")

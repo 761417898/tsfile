@@ -20,7 +20,6 @@
 #define READER_FILTER_OPERATOR_AND_FILTER_H
 
 #include "binary_filter.h"
-// #include "storage/storage_utils.h"
 
 namespace storage {
 
@@ -34,16 +33,16 @@ class AndFilter : public BinaryFilter {
         return left_->satisfy(statistic) && right_->satisfy(statistic);
     }
 
-    FORCE_INLINE bool satisfy(long time, int64_t value) {
+    FORCE_INLINE bool satisfy(int64_t time, Object value) {
         return left_->satisfy(time, value) && right_->satisfy(time, value);
     }
 
-    FORCE_INLINE bool satisfy_start_end_time(long start_time, long end_time) {
+    FORCE_INLINE bool satisfy_start_end_time(int64_t start_time, int64_t end_time) {
         return left_->satisfy_start_end_time(start_time, end_time) &&
                right_->satisfy_start_end_time(start_time, end_time);
     }
 
-    FORCE_INLINE bool contain_start_end_time(long start_time, long end_time) {
+    FORCE_INLINE bool contain_start_end_time(int64_t start_time, int64_t end_time) {
         return left_->contain_start_end_time(start_time, end_time) &&
                right_->contain_start_end_time(start_time, end_time);
     }

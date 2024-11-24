@@ -227,31 +227,12 @@ class Object {
         }
     }
 
-    friend bool operator>=(const Object &object1, const Object &objec2) {
-        return object1.operator>=(objec2);
-    }
-    friend bool operator>(const Object &object1, const Object &objec2) {
-        return object1.operator>(objec2);
-    }
-    friend bool operator==(const Object &object1, const Object &objec2) {
-        return object1.operator==(objec2);
-    }
-    friend bool operator<=(const Object &object1, const Object &objec2) {
-        return object1.operator<=(objec2);
-    }
-    friend bool operator<(const Object &object1, const Object &objec2) {
-        return object1.operator<(objec2);
-    }
-    friend bool operator!=(const Object &object1, const Object &objec2) {
-        return object1.operator!=(objec2);
-    }
-
-    bool operator>=(const int64_t &time) const {}
-    bool operator<=(const int64_t &time) const {}
-    bool operator==(const int64_t &time) const {}
-    bool operator>(const int64_t &time) const {}
-    bool operator<(const int64_t &time) const {}
-    bool operator!=(const int64_t &time) const {}
+//    bool operator>=(const int64_t &time) const {}
+//    bool operator<=(const int64_t &time) const {}
+//    bool operator==(const int64_t &time) const {}
+//    bool operator>(const int64_t &time) const {}
+//    bool operator<(const int64_t &time) const {}
+//    bool operator!=(const int64_t &time) const {}
 
     FORCE_INLINE const common::TSDataType get_type() const { return type_; }
 

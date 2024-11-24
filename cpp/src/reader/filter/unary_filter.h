@@ -23,19 +23,19 @@
 #include "reader/filter/filter_type.h"
 
 namespace storage {
-template <typename T>
+
 class UnaryFilter : public Filter {
    public:
     UnaryFilter() : Filter() {}
-    UnaryFilter(T value, FilterType type) : Filter() {
+    UnaryFilter(Object value, FilterType type) : Filter() {
         value_ = value;
         type_ = type;
     }
     virtual ~UnaryFilter() {}
 
-    T get_value() { return value_; }
+    Object get_value() { return value_; }
 
-    void set_value(T value) { value_ = value; }
+    void set_value(Object value) { value_ = value; }
 
     FilterType get_filter_type() { return type_; }
 
@@ -43,21 +43,21 @@ class UnaryFilter : public Filter {
         ASSERT(false);
         return false;
     }
-    virtual bool satisfy(long time, T value) {
+    virtual bool satisfy(int64_t time, Object value) {
         ASSERT(false);
         return false;
     }
-    virtual bool satisfy_start_end_time(long start_time, long end_time) {
+    virtual bool satisfy_start_end_time(int64_t start_time, int64_t end_time) {
         ASSERT(false);
         return false;
     }
-    virtual bool contain_start_end_time(long start_time, long end_time) {
+    virtual bool contain_start_end_time(int64_t start_time, int64_t end_time) {
         ASSERT(false);
         return false;
     }
 
    protected:
-    T value_;
+    Object value_;
     FilterType type_;
 };
 

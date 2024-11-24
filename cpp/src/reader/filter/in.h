@@ -36,16 +36,16 @@ class In : public Filter {
 
     bool satisfy(Statistic *statistic) { return true; }
 
-    bool satisfy(long time, Object value) {
+    bool satisfy(int64_t time, Object value) {
         Object v = (type_ == TIME_FILTER ? time : value);
         auto it = std::find(values_.begin(), values_.end(), v);
         bool result = (it != values_.end() ? true : false);
         return result != not_;
     }
 
-    bool satisfy_start_end_time(long start_time, long end_time) { return true; }
+    bool satisfy_start_end_time(int64_t start_time, int64_t end_time) { return true; }
 
-    bool contain_start_end_time(long start_time, long end_time) { return true; }
+    bool contain_start_end_time(int64_t start_time, int64_t end_time) { return true; }
 
    protected:
     std::vector<T> values_;

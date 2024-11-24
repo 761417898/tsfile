@@ -24,10 +24,10 @@
 
 namespace storage {
 template <typename T>
-class NotEq : public UnaryFilter<T> {
+class NotEq : public UnaryFilter {
    public:
     NotEq() {}
-    NotEq(T value, FilterType type) : UnaryFilter<T>(value, type) {}
+    NotEq(T value, FilterType type) : UnaryFilter(value, type) {}
     virtual ~NotEq() {}
 
     bool satisfy(Statistic *statistic) {
@@ -45,12 +45,12 @@ class NotEq : public UnaryFilter<T> {
         }
     }
 
-    bool satisfy(long time, Object value) {
+    bool satisfy(int64_t time, Object value) {
         Object v = (this->type_ == TIME_FILTER ? time : value);
         return !this->value_.equals(v);
     }
 
-    bool satisfy_start_end_time(long start_time, long end_time) {
+    bool satisfy_start_end_time(int64_t start_time, int64_t end_time) {
         if (this->type_ == TIME_FILTER) {
             return this->value_ != end_time && this->value_ != start_time;
         } else {
@@ -58,7 +58,7 @@ class NotEq : public UnaryFilter<T> {
         }
     }
 
-    bool contain_start_end_time(long start_time, long end_time) {
+    bool contain_start_end_time(int64_t start_time, int64_t end_time) {
         if (this->type_ == TIME_FILTER) {
             return this->value_ < start_time || this->value_ > end_time;
         } else {

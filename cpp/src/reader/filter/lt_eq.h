@@ -26,10 +26,10 @@
 
 namespace storage {
 template <typename T>
-class LtEq : public UnaryFilter<T> {
+class LtEq : public UnaryFilter {
    public:
-    LtEq() : UnaryFilter<T>() {}
-    LtEq(T value, FilterType type) : UnaryFilter<T>(value, type) {}
+    LtEq() : UnaryFilter() {}
+    LtEq(T value, FilterType type) : UnaryFilter(value, type) {}
     virtual ~LtEq() {}
 
     bool satisfy(Statistic *statistic) {
@@ -46,12 +46,12 @@ class LtEq : public UnaryFilter<T> {
         }
     }
 
-    bool satisfy(long time, Object value) {
+    bool satisfy(int64_t time, Object value) {
         Object v = (this->type_ == TIME_FILTER ? time : value);
         return this->value_ >= v;
     }
 
-    bool satisfy_start_end_time(long start_time, long end_time) {
+    bool satisfy_start_end_time(int64_t start_time, int64_t end_time) {
         if (this->type_ == TIME_FILTER) {
             return this->value_ >= start_time;
         } else {
@@ -59,7 +59,7 @@ class LtEq : public UnaryFilter<T> {
         }
     }
 
-    bool contain_start_end_time(long start_time, long end_time) {
+    bool contain_start_end_time(int64_t start_time, int64_t end_time) {
         if (this->type_ == TIME_FILTER) {
             return this->value_ >= end_time;
         } else {
