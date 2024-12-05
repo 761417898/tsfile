@@ -33,8 +33,8 @@ class OrFilter : public BinaryFilter {
     FORCE_INLINE bool satisfy(Statistic *statistic) {
         return left_->satisfy(statistic) || right_->satisfy(statistic);
     }
-
-    FORCE_INLINE bool satisfy(int64_t time, int64_t value) {
+ 
+    FORCE_INLINE bool satisfy(int64_t time, Object value) {
         return left_->satisfy(time, value) || right_->satisfy(time, value);
     }
 
@@ -48,53 +48,53 @@ class OrFilter : public BinaryFilter {
                right_->contain_start_end_time(start_time, end_time);
     }
 
-    std::vector<TimeRint64_tge *> *get_time_rint64_tges() {
-        std::vector<TimeRint64_tge *> *result = new std::vector<TimeRint64_tge *>();
-        std::vector<TimeRint64_tge *> *left_time_rint64_tges = left_->get_time_rint64_tges();
-        std::vector<TimeRint64_tge *> *right_time_rint64_tges = right_->get_time_rint64_tges();
+    std::vector<TimeRange *> *get_time_ranges() {
+        std::vector<TimeRange *> *result = new std::vector<TimeRange *>();
+        std::vector<TimeRange *> *left_time_ranges = left_->get_time_ranges();
+        std::vector<TimeRange *> *right_time_ranges = right_->get_time_ranges();
 
         int left_index = 0, right_index = 0;
-        int left_size = left_time_rint64_tges->size();
-        int right_size = right_time_rint64_tges->size();
-        TimeRint64_tge *rint64_tge = choose_next_rint64_tge(
-            left_time_rint64_tges, right_time_rint64_tges, left_index, right_index);
+        int left_size = left_time_ranges->size();
+        int right_size = right_time_ranges->size();
+        TimeRange *range = choose_next_range(
+            left_time_ranges, right_time_ranges, left_index, right_index);
         while (left_index < left_size || right_index < right_size) {
-            TimeRint64_tge *choosen_rint64_tge = choose_next_rint64_tge(
-                left_time_rint64_tges, right_time_rint64_tges, left_index, right_index);
-            if (choosen_rint64_tge->start_time_ > rint64_tge->end_time_) {
+            TimeRange *choosen_range = choose_next_range(
+                left_time_ranges, right_time_ranges, left_index, right_index);
+            if (choosen_range->start_time_ > range->end_time_) {
                 result->push_back(
-                    new TimeRint64_tge(rint64_tge->start_time_, rint64_tge->end_time_));
-                rint64_tge = choosen_rint64_tge;
+                    new TimeRange(range->start_time_, range->end_time_));
+                range = choosen_range;
             } else {
-                rint64_tge->end_time_ =
-                    std::max(rint64_tge->end_time_, choosen_rint64_tge->end_time_);
+                range->end_time_ =
+                    std::max(range->end_time_, choosen_range->end_time_);
             }
         }
-        result->push_back(new TimeRint64_tge(rint64_tge->start_time_, rint64_tge->end_time_));
+        result->push_back(new TimeRange(range->start_time_, range->end_time_));
         return result;
     }
 
    private:
-    TimeRint64_tge *choose_next_rint64_tge(std::vector<TimeRint64_tge *> *left_time_rint64_tges,
-                                 std::vector<TimeRint64_tge *> *right_time_rint64_tges,
+    TimeRange *choose_next_range(std::vector<TimeRange *> *left_time_ranges,
+                                 std::vector<TimeRange *> *right_time_ranges,
                                  int &left_index, int &right_index) {
-        int left_size = left_time_rint64_tges->size();
-        int right_size = right_time_rint64_tges->size();
+        int left_size = left_time_ranges->size();
+        int right_size = right_time_ranges->size();
         if (left_index < left_size && right_index < right_size) {
-            TimeRint64_tge *left_rint64_tge = left_time_rint64_tges->at(left_index);
-            TimeRint64_tge *right_rint64_tge = right_time_rint64_tges->at(right_index);
-            // Choose the rint64_tge with the smaller minimum start time
-            if (left_rint64_tge->start_time_ <= right_rint64_tge->start_time_) {
+            TimeRange *left_range = left_time_ranges->at(left_index);
+            TimeRange *right_range = right_time_ranges->at(right_index);
+            // Choose the range with the smaller minimum start time
+            if (left_range->start_time_ <= right_range->start_time_) {
                 left_index++;
-                return left_rint64_tge;
+                return left_range;
             } else {
                 right_index++;
-                return right_rint64_tge;
+                return right_range;
             }
         } else if (left_index < left_size) {
-            return left_time_rint64_tges->at(left_index++);
+            return left_time_ranges->at(left_index++);
         } else {
-            return right_time_rint64_tges->at(right_index++);
+            return right_time_ranges->at(right_index++);
         }
     }
 };

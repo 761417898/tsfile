@@ -24,11 +24,10 @@
 #include "common/statistic.h"
 
 namespace storage {
-template <typename T>
 class Gt : public UnaryFilter {
    public:
     Gt() : UnaryFilter() {}
-    Gt(T value, FilterType type) : UnaryFilter(value, type) {}
+    Gt(Object value, FilterType type) : UnaryFilter(value, type) {}
     virtual ~Gt() {}
 
     bool satisfy(Statistic *statistic) {

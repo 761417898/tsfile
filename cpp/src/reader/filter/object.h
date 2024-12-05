@@ -227,13 +227,6 @@ class Object {
         }
     }
 
-//    bool operator>=(const int64_t &time) const {}
-//    bool operator<=(const int64_t &time) const {}
-//    bool operator==(const int64_t &time) const {}
-//    bool operator>(const int64_t &time) const {}
-//    bool operator<(const int64_t &time) const {}
-//    bool operator!=(const int64_t &time) const {}
-
     FORCE_INLINE const common::TSDataType get_type() const { return type_; }
 
    private:

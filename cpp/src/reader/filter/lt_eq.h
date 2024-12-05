@@ -23,13 +23,14 @@
 
 #include "common/statistic.h"
 #include "reader/filter/gt.h"
+#include "common/statistic.h"
 
 namespace storage {
-template <typename T>
+
 class LtEq : public UnaryFilter {
    public:
     LtEq() : UnaryFilter() {}
-    LtEq(T value, FilterType type) : UnaryFilter(value, type) {}
+    LtEq(Object value, FilterType type) : UnaryFilter(value, type) {}
     virtual ~LtEq() {}
 
     bool satisfy(Statistic *statistic) {

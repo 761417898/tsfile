@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#include "reader/filter/gt.h"
+#include "reader/filter/not_eq.h"
 
 #include <gtest/gtest.h>
 
@@ -25,40 +25,35 @@
 using namespace storage;
 using namespace common;
 
-TEST(GtTest, TestSatisfyWithTimeFilter) {
-    Gt gt(int64_t (5), TIME_FILTER);
+TEST(NotEqTest, TestSatisfyWithTimeFilter) {
+    NotEq notEq(5, TIME_FILTER);
     Statistic* stat = StatisticFactory::alloc_statistic(common::INT32);
     stat->update(3, 0);
     stat->update(6, 0);
 
-    EXPECT_TRUE(gt.satisfy(stat));
+    EXPECT_TRUE(notEq.satisfy(stat));
     StatisticFactory::free(stat);
 }
 
-TEST(GtTest, TestSatisfyWithValue) {
-    Gt gt(Object(int64_t (5)), VALUE_FILTER);
-    Object value(int64_t (6));
+TEST(NotEqTest, TestSatisfyWithValue) {
+    NotEq notEq(Object(5), VALUE_FILTER);
+    Object value1(6);
+    Object value2(5);
 
-    EXPECT_TRUE(gt.satisfy(0, value));
+    EXPECT_TRUE(notEq.satisfy(0, value1));
+    EXPECT_FALSE(notEq.satisfy(0, value2));
 }
 
-TEST(GtTest, TestSatisfyWithLowerValue) {
-    Gt gt(Object(int64_t (5)), VALUE_FILTER);
-    Object value(int64_t (4));
+TEST(NotEqTest, TestSatisfyStartEndTime) {
+    NotEq notEq((int64_t)5, TIME_FILTER);
 
-    EXPECT_FALSE(gt.satisfy(0, value));
+    EXPECT_TRUE(notEq.satisfy_start_end_time(3, 7));
+    EXPECT_FALSE(notEq.satisfy_start_end_time(5, 7));
 }
 
-TEST(GtTest, TestSatisfyStartEndTime) {
-    Gt gt(int64_t (5), TIME_FILTER);
+TEST(NotEqTest, TestContainStartEndTime) {
+    NotEq notEq((int64_t)5, TIME_FILTER);
 
-    EXPECT_TRUE(gt.satisfy_start_end_time(3, 7));
-    EXPECT_FALSE(gt.satisfy_start_end_time(1, 5));
-}
-
-TEST(GtTest, TestContainStartEndTime) {
-    Gt gt(int64_t (5), TIME_FILTER);
-
-    EXPECT_TRUE(gt.contain_start_end_time(6, 7));
-    EXPECT_FALSE(gt.contain_start_end_time(4, 5));
+    EXPECT_TRUE(notEq.contain_start_end_time(2, 4));
+    EXPECT_FALSE(notEq.contain_start_end_time(4, 6));
 }

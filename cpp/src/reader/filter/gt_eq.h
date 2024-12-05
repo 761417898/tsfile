@@ -21,13 +21,14 @@
 
 #include "reader/filter/object.h"
 #include "reader/filter/unary_filter.h"
+#include "common/statistic.h"
 
 namespace storage {
-template <typename T>
+
 class GtEq : public UnaryFilter {
    public:
     GtEq() : UnaryFilter(){};
-    GtEq(T value, FilterType type) : UnaryFilter(value, type) {}
+    GtEq(Object value, FilterType type) : UnaryFilter(value, type) {}
 
     virtual ~GtEq() {}
 

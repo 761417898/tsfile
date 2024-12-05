@@ -21,13 +21,14 @@
 
 #include "reader/filter/object.h"
 #include "reader/filter/unary_filter.h"
+#include "common/statistic.h"
 
 namespace storage {
-template <typename T>
+
 class NotEq : public UnaryFilter {
    public:
     NotEq() {}
-    NotEq(T value, FilterType type) : UnaryFilter(value, type) {}
+    NotEq(Object value, FilterType type) : UnaryFilter(value, type) {}
     virtual ~NotEq() {}
 
     bool satisfy(Statistic *statistic) {

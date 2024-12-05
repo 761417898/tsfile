@@ -24,13 +24,14 @@
 
 #include "reader/filter/binary_filter.h"
 #include "reader/filter/object.h"
+#include "common/statistic.h"
 
 namespace storage {
-template <typename T>
+
 class In : public Filter {
    public:
     In() {}
-    In(std::vector<T> &values, FilterType type, bool not_in)
+    In(std::vector<Object> &values, FilterType type, bool not_in)
         : values_(values), type_(type), not_(not_in) {}
     virtual ~In() {}
 
@@ -48,7 +49,7 @@ class In : public Filter {
     bool contain_start_end_time(int64_t start_time, int64_t end_time) { return true; }
 
    protected:
-    std::vector<T> values_;
+    std::vector<Object> values_;
     FilterType type_;
     bool not_;
 };
