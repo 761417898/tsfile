@@ -33,7 +33,12 @@ namespace storage {
 }
 
 namespace storage {
-    /* schema information for one measurement */
+    /**
+    * @brief Represents the schema information for a single measurement.
+    *
+    * This structure holds the metadata necessary to describe how a specific measurement (column) is stored,
+    * including its name, data type, encoding method, and compression type.
+    */
     struct MeasurementSchema {
         std::string measurement_name_; // for example: "s1"
         common::TSDataType data_type_;
@@ -62,6 +67,19 @@ namespace storage {
               value_chunk_writer_(nullptr) {
         }
 
+        /**
+         * @brief Constructs a MeasurementSchema object with the given parameters.
+         *
+         * @param measurement_name The name of the measurement. Must be a non-empty string.
+         *                         This name is used to identify the measurement within the table.
+         * @param data_type The data type of the measurement, such as INT32, DOUBLE, TEXT, etc.
+         *                  This determines how the data will be stored and interpreted.
+         * @param encoding The encoding method to use for this measurement.
+         *                 Encoding can help optimize storage and retrieval performance.
+         * @param compression_type The compression type to apply to this measurement.
+         *                         Compression reduces storage space but may impact read/write performance.
+         * @note It is the responsibility of the caller to ensure that `measurement_name` is not empty.
+         */
         MeasurementSchema(const std::string &measurement_name,
                           common::TSDataType data_type, common::TSEncoding encoding,
                           common::CompressionType compression_type)
@@ -151,7 +169,16 @@ namespace storage {
         TimeChunkWriter *time_chunk_writer_ = nullptr;
     };
 
-    enum class ColumnCategory { TAG, FIELD };
+    /**
+    * @brief Represents the category of a column in a table schema.
+    *
+    * This enumeration class defines the supported categories for columns within a table schema,
+    * distinguishing between tag and field columns.
+    */
+    enum class ColumnCategory {
+        TAG,
+        FIELD
+    };
 
     class TableSchema {
     public:
@@ -162,6 +189,18 @@ namespace storage {
 
         TableSchema() = default;
 
+        /**
+         * Constructs a TableSchema object with the given table name, column schemas, and column categories.
+         *
+         * @param table_name The name of the table. Must be a non-empty string.
+         *                   This name is used to identify the table within the system.
+         * @param column_schemas A vector containing pointers to MeasurementSchema objects.
+         *                       Each MeasurementSchema defines the schema for one column in the table.
+         *                       The caller retains ownership of these pointers.
+         * @param column_categories A vector containing ColumnCategory enums that correspond to each column schema.
+         *                          These categories provide additional information about how each column should be handled or optimized.
+         * @note It is the responsibility of the caller to ensure that the sizes of `column_schemas` and `column_categories` match.
+         */
         TableSchema(const std::string &table_name,
                     const std::vector<MeasurementSchema*>
                     &column_schemas,

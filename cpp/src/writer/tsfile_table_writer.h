@@ -25,12 +25,42 @@ namespace storage {
 
 class TsFileTableWriter {
    public:
+    /**
+     * TsFileTableWriter is used to write table data into a target file with the given schema,
+     * optionally limiting the memory usage.
+     *
+     * @param writer_file Target file where the table data will be written. Must not be null.
+     *                    The caller retains ownership of this pointer.
+     * @param table_schema Used to construct table structures. Defines the schema of the table
+     *                     being written. Must not be null. The caller retains ownership of this pointer.
+     * @param memory_threshold Optional parameter used to limit the memory size of objects.
+     *                         If set to 0, no memory limit is enforced.
+     */
     TsFileTableWriter(WriteFile* writer_file,
                       TableSchema* table_schema,
                       uint64_t memory_threshold = 0);
     ~TsFileTableWriter();
+    /**
+     * Writes the given tablet data into the target file according to the schema.
+     *
+     * @param tablet The tablet containing the data to be written. Must not be null.
+     *               The caller retains ownership of this object.
+     * @return Returns 0 on success, or a non-zero error code on failure.
+     */
     int write_table(const Tablet& tablet);
+    /**
+     * Flushes any buffered data to the underlying storage medium, ensuring all data is written out.
+     * This method ensures that all pending writes are persisted.
+     *
+     * @return Returns 0 on success, or a non-zero error code on failure.
+     */
     int flush();
+    /**
+     * Closes the writer and releases any resources held by it.
+     * After calling this method, no further operations should be performed on this instance.
+     *
+     * @return Returns 0 on success, or a non-zero error code on failure.
+     */
     int close();
 
    private:

@@ -37,6 +37,12 @@ template <typename T>
 class TabletRowIterator;
 class TabletColIterator;
 
+/**
+ * @brief Represents a collection of data rows with associated metadata for insertion into a table.
+ *
+ * This class is used to manage and organize data that will be inserted into a specific target table.
+ * It handles the storage of timestamps and values, along with their associated metadata such as column names and types.
+ */
 class Tablet {
     struct ValueMatrixEntry {
         union {
@@ -100,6 +106,19 @@ class Tablet {
                        });
     }
 
+    /**
+     * @brief Constructs a Tablet object with the given parameters.
+     *
+     * @param insert_target_name The name of the target table where the data will be inserted.
+     *                           Must be a non-empty string.
+     * @param column_names A vector containing the names of the columns in the tablet.
+     *                     Each name corresponds to a column in the target table.
+     * @param data_types A vector containing the data types of each column.
+     *                   These must match the schema of the target table.
+     * @param column_categories A vector containing the categories (tag or field) of each column.
+     *                          These provide additional information on how each column should be handled.
+     * @param max_rows The maximum number of rows that this tablet can hold. Defaults to DEFAULT_MAX_ROWS.
+     */
     Tablet(const std::string &insert_target_name,
            const std::vector<std::string> &column_names,
            const std::vector<common::TSDataType> &data_types,
@@ -122,23 +141,58 @@ class Tablet {
 
     ~Tablet() { destroy(); }
 
+    /**
+     * @brief Initializes the Tablet object.
+     *
+     * This method performs any necessary setup before the tablet can be used.
+     * @return Returns 0 on success, or a non-zero error code on failure.
+     */
     int init();
     void destroy();
     size_t get_column_count() const { return schema_vec_->size(); }
     int get_cur_row_size() const { return cur_row_size_; }
 
+    /**
+     * @brief Adds a timestamp to the specified row.
+     *
+     * @param row_index The index of the row to which the timestamp will be added.
+     *                  Must be less than the maximum number of rows.
+     * @param timestamp The timestamp value to add.
+     * @return Returns 0 on success, or a non-zero error code on failure.
+     */
     int add_timestamp(uint32_t row_index, int64_t timestamp);
 
     void *get_value(int row_index, uint32_t schema_index,
                     common::TSDataType &data_type) const;
+    /**
+     * @brief Template function to add a value of type T to the specified row and column.
+     *
+     * @tparam T The type of the value to add.
+     * @param row_index The index of the row to which the value will be added.
+     *                  Must be less than the maximum number of rows.
+     * @param column_index The index of the column schema corresponding to the value being added.
+     * @param val The value to add.
+     * @return Returns 0 on success, or a non-zero error code on failure.
+     */
     template <typename T>
-    int add_value(uint32_t row_index, uint32_t schema_index, T val);
+    int add_value(uint32_t row_index, uint32_t column_index, T val);
 
     void set_column_categories(
         const std::vector<ColumnCategory> &column_categories);
     std::shared_ptr<IDeviceID> get_device_id(int i) const;
+    /**
+     * @brief Template function to add a value of type T to the specified row and column by name.
+     *
+     * @tparam T The type of the value to add.
+     * @param row_index The index of the row to which the value will be added.
+     *                  Must be less than the maximum number of rows.
+     * @param column_name The name of the column to which the value will be added.
+     *                         Must match one of the column names provided during construction.
+     * @param val The value to add.
+     * @return Returns 0 on success, or a non-zero error code on failure.
+     */
     template <typename T>
-    int add_value(uint32_t row_index, const std::string &measurement_name,
+    int add_value(uint32_t row_index, const std::string &column_name,
                   T val);
 
     friend class TabletColIterator;
