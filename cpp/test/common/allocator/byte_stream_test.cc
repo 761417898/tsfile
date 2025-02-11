@@ -276,9 +276,9 @@ TEST_F(SerializationUtilTest, WriteReadString) {
     std::string value_to_write = "Hello, World!";
     std::string value_read = "";
 
-    EXPECT_EQ(SerializationUtil::write_str(value_to_write, *byte_stream_),
+    EXPECT_EQ(SerializationUtil::write_var_str(value_to_write, *byte_stream_),
               common::E_OK);
-    EXPECT_EQ(SerializationUtil::read_str(value_read, *byte_stream_),
+    EXPECT_EQ(SerializationUtil::read_var_str(value_read, *byte_stream_),
               common::E_OK);
     EXPECT_EQ(value_to_write, value_read);
 }

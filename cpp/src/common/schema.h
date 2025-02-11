@@ -88,9 +88,9 @@ namespace storage {
                 if (RET_FAIL(common::SerializationUtil::write_ui32(props_.size(),
                     out))) {
                     for (const auto &prop: props_) {
-                        if (RET_FAIL(common::SerializationUtil::write_str(
+                        if (RET_FAIL(common::SerializationUtil::write_var_str(
                             prop.first, out))) {
-                        } else if (RET_FAIL(common::SerializationUtil::write_str(
+                        } else if (RET_FAIL(common::SerializationUtil::write_var_str(
                             prop.second, out))) {
                         }
                         if (IS_FAIL(ret)) break;
@@ -123,9 +123,9 @@ namespace storage {
                     in))) {
                     for (uint32_t i = 0; i < props_.size(); ++i) {
                         std::string key, value;
-                        if (RET_FAIL(common::SerializationUtil::read_str(
+                        if (RET_FAIL(common::SerializationUtil::read_var_str(
                             key, in))) {
-                        } else if (RET_FAIL(common::SerializationUtil::read_str(
+                        } else if (RET_FAIL(common::SerializationUtil::read_var_str(
                             value, in))) {
                         }
                         props_.insert(std::make_pair(key, value));
