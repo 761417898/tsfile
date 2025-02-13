@@ -23,6 +23,14 @@
 
 namespace storage {
 
+/**
+ * @brief Facilitates writing structured table data into a TsFile with a specified schema.
+ *
+ * The TsFileTableWriter class is designed to write structured data, particularly suitable for time-series data,
+ * into a file optimized for efficient storage and retrieval (referred to as TsFile here). It allows users to define
+ * the schema of the tables they want to write, add rows of data according to that schema, and serialize this data
+ * into a TsFile. Additionally, it provides options to limit memory usage during the writing process.
+ */
 class TsFileTableWriter {
    public:
     /**
@@ -30,9 +38,8 @@ class TsFileTableWriter {
      * optionally limiting the memory usage.
      *
      * @param writer_file Target file where the table data will be written. Must not be null.
-     *                    The caller retains ownership of this pointer.
      * @param table_schema Used to construct table structures. Defines the schema of the table
-     *                     being written. Must not be null. The caller retains ownership of this pointer.
+     *                     being written.
      * @param memory_threshold Optional parameter used to limit the memory size of objects.
      *                         If set to 0, no memory limit is enforced.
      */
@@ -44,7 +51,6 @@ class TsFileTableWriter {
      * Writes the given tablet data into the target file according to the schema.
      *
      * @param tablet The tablet containing the data to be written. Must not be null.
-     *               The caller retains ownership of this object.
      * @return Returns 0 on success, or a non-zero error code on failure.
      */
     int write_table(const Tablet& tablet);

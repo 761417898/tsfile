@@ -274,7 +274,6 @@ TEST_F(TsFileWriterTest, WriteMultipleTabletsMultiFlush) {
                           std::make_shared<std::vector<MeasurementSchema>>(
                               schema_vecs[i]),
                           1);
-            tablet.init();
             for (int j = 0; j < measurement_num; j++) {
                 tablet.add_timestamp(0, 16225600000 + tablet_num * 100);
                 tablet.add_value(0, j, static_cast<int32_t>(tablet_num));
@@ -349,7 +348,6 @@ TEST_F(TsFileWriterTest, WriteMultipleTabletsInt64) {
             device_name,
             std::make_shared<std::vector<MeasurementSchema>>(schema_vec[i]),
             max_rows);
-        tablet.init();
         for (int j = 0; j < measurement_num; j++) {
             for (int row = 0; row < max_rows; row++) {
                 tablet.add_timestamp(row, 16225600 + row);
@@ -393,7 +391,6 @@ TEST_F(TsFileWriterTest, WriteMultipleTabletsDouble) {
             device_name,
             std::make_shared<std::vector<MeasurementSchema>>(schema_vec[i]),
             max_rows);
-        tablet.init();
         for (int j = 0; j < measurement_num; j++) {
             for (int row = 0; row < max_rows; row++) {
                 tablet.add_timestamp(row, 16225600 + row);
@@ -433,7 +430,6 @@ TEST_F(TsFileWriterTest, FlushMultipleDevice) {
     for (int i = 0; i < device_num; i++) {
         std::string device_name = "test_device" + std::to_string(i);
         storage::Tablet tablet(device_name, std::make_shared<std::vector<MeasurementSchema>>(schema_vec[i]), max_rows);
-        tablet.init();
         for (int j = 0; j < measurement_num; j++) {
             for (int row = 0; row < max_rows; row++) {
                 tablet.add_timestamp(row, 16225600 + row);
@@ -510,7 +506,6 @@ TEST_F(TsFileWriterTest, AnalyzeTsfileForload) {
     for (int i = 0; i < device_num; i++) {
         std::string device_name = "test_device" + std::to_string(i);
         storage::Tablet tablet(device_name, std::make_shared<std::vector<MeasurementSchema>>(schema_vec[i]), max_rows);
-        tablet.init();
         for (int j = 0; j < measurement_num; j++) {
             for (int row = 0; row < max_rows; row++) {
                 tablet.add_timestamp(row, 16225600 + row);

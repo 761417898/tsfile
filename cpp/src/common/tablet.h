@@ -75,6 +75,7 @@ class Tablet {
             ASSERT(false);
             max_row_num_ = DEFAULT_MAX_ROWS;
         }
+        init();
     }
 
     Tablet(const std::string &device_id,
@@ -104,6 +105,7 @@ class Tablet {
                        [](const std::string &name, common::TSDataType type) {
                            return MeasurementSchema(name, type);
                        });
+        init();
     }
 
     /**
@@ -137,6 +139,7 @@ class Tablet {
                                   common::get_default_compressor()));
         }
         set_column_categories(column_categories);
+        init();
     }
 
     ~Tablet() { destroy(); }

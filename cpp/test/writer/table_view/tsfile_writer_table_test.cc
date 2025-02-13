@@ -73,27 +73,19 @@ class TsFileWriterTableTest : public ::testing::Test {
     }
 
     static TableSchema* gen_table_schema(int table_num) {
-        std::vector<MeasurementSchema*> measurement_schemas;
-        std::vector<ColumnCategory> column_categories;
+        std::vector<ColumnSchema> column_schemas;
         int id_schema_num = 5;
         int measurement_schema_num = 5;
         for (int i = 0; i < id_schema_num; i++) {
-            measurement_schemas.emplace_back(
-                new MeasurementSchema(
-                    "id" + to_string(i), TSDataType::STRING, TSEncoding::PLAIN,
-                    CompressionType::UNCOMPRESSED));
-            column_categories.emplace_back(ColumnCategory::TAG);
+            column_schemas.emplace_back(
+                    "id" + to_string(i), TSDataType::STRING, ColumnCategory::TAG);
         }
         for (int i = 0; i < measurement_schema_num; i++) {
-            measurement_schemas.emplace_back(
-                new MeasurementSchema(
-                    "s" + to_string(i), TSDataType::INT64, TSEncoding::PLAIN,
-                    CompressionType::UNCOMPRESSED));
-            column_categories.emplace_back(ColumnCategory::FIELD);
+            column_schemas.emplace_back(
+                    "s" + to_string(i), TSDataType::INT64, ColumnCategory::FIELD);
         }
         return new TableSchema("testTable" + to_string(table_num),
-                                             measurement_schemas,
-                                             column_categories);
+                                             column_schemas);
     }
 
     static storage::Tablet gen_tablet(TableSchema* table_schema,
@@ -102,7 +94,6 @@ class TsFileWriterTableTest : public ::testing::Test {
                       table_schema->get_measurement_names(),
                       table_schema->get_data_types(),
                       table_schema->get_column_categories());
-        tablet.init();
 
         int num_timestamp_per_device = 10;
         char* literal = new char[std::strlen("device_id") + 1];
