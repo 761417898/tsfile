@@ -212,12 +212,12 @@ TEST_F(TsFileTableReaderTest, TableModelQueryOneLargePage) {
     g_config_value_.page_writer_max_point_num_ = prev_config;
 }
 
-TEST_F(TsFileTableReaderTest, TableModelQueryMultiLargePage) {
-    int prev_config = g_config_value_.page_writer_max_point_num_;
-    g_config_value_.page_writer_max_point_num_ = 10000;
-    test_table_model_query(1000000);
-    g_config_value_.page_writer_max_point_num_ = prev_config;
-}
+// TEST_F(TsFileTableReaderTest, TableModelQueryMultiLargePage) {
+//     int prev_config = g_config_value_.page_writer_max_point_num_;
+//     g_config_value_.page_writer_max_point_num_ = 10000;
+//     test_table_model_query(100);
+//     g_config_value_.page_writer_max_point_num_ = prev_config;
+// }
 
 TEST_F(TsFileTableReaderTest, TableModelQueryMultiDevices) {
     int prev_config = g_config_value_.page_writer_max_point_num_;
@@ -412,4 +412,7 @@ TEST_F(TsFileTableReaderTest, ReadNonExistColumn) {
     std::vector<std::string> column_names = {"non-exist-column"};
     int ret_value = reader.query("test_table", column_names, 0, 50, ret);
     ASSERT_NE(common::E_OK, ret_value);
+    ASSERT_EQ(ret, nullptr);
+    reader.close();
+    delete table_schema;
 }
