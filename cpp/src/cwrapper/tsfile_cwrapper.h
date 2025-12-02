@@ -35,6 +35,8 @@ typedef enum {
     TS_DATATYPE_DOUBLE = 4,
     TS_DATATYPE_TEXT = 5,
     TS_DATATYPE_VECTOR = 6,
+    TS_DATATYPE_DATE = 9,
+    TS_DATATYPE_BLOB = 10,
     TS_DATATYPE_STRING = 11,
     TS_DATATYPE_NULL_TYPE = 254,
     TS_DATATYPE_INVALID = 255
@@ -572,6 +574,15 @@ TableSchema tsfile_reader_get_table_schema(TsFileReader reader,
 TableSchema* tsfile_reader_get_all_table_schemas(TsFileReader reader,
                                                  uint32_t* size);
 
+    /**
+ * @brief Gets all timeseries schema in the tsfile.
+ *
+ * @return DeviceSchema list, contains timeseries info.
+ * @note Caller should call free_device_schema and free to free the ptr.
+ */
+    DeviceSchema* tsfile_reader_get_all_timeseries_schemas(TsFileReader reader,
+                                                           uint32_t* size);
+
 // Close and free resource.
 void free_tablet(Tablet* tablet);
 void free_tsfile_result_set(ResultSet* result_set);
@@ -623,6 +634,10 @@ INSERT_DATA_INTO_TS_RECORD_BY_NAME(int64_t);
 INSERT_DATA_INTO_TS_RECORD_BY_NAME(bool);
 INSERT_DATA_INTO_TS_RECORD_BY_NAME(float);
 INSERT_DATA_INTO_TS_RECORD_BY_NAME(double);
+
+ERRNO _insert_data_into_ts_record_by_name_string_with_len(
+    TsRecord data, const char* measurement_name, const char* value,
+    const uint32_t value_len);
 
 // Write a tablet into a device.
 ERRNO _tsfile_writer_write_tablet(TsFileWriter writer, Tablet tablet);
